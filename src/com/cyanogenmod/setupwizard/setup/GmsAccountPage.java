@@ -107,24 +107,14 @@ public class GmsAccountPage extends SetupPage {
         if (action == Page.ACTION_PREVIOUS) {
             getCallbacks().onPreviousPage();
         } else {
-            super.doLoadAction(fragmentManager, action);
-            if (!SetupWizardUtils.isNetworkConnected(mContext) && !SetupWizardUtils.frpEnabled(mContext)) {
-                if (SetupWizardApp.DEBUG) {
-                    Log.d(TAG, "No network, no FRP enforcement, skip GMS account");
-                }
-                getCallbacks().onNextPage();
-            } else if (!SetupWizardUtils.accountExists(mContext, SetupWizardApp.ACCOUNT_TYPE_GMS)) {
-                launchGmsAccountSetup();
-            } else {
-                // This can happen if the user goes from setup -> restore, but chooses to set
-                // their device up as "new". Thus we need to not re-prompt this entire flow,
-                // skip ahead. CYNGNOS-2459
-                if (SetupWizardApp.DEBUG) {
-                    Log.d(TAG, "Google account already setup, skip gms setup");
-                }
-                setHidden(true);
-                getCallbacks().onNextPage();
+            // ----------------------------------------------------------------------
+            // This is the microG build, so we don't want to mess with Google at all
+            // ----------------------------------------------------------------------
+            if (SetupWizardApp.DEBUG) {
+                Log.d(TAG, "microG build, skip gms setup");
             }
+            setHidden(true);
+            getCallbacks().onNextPage();
         }
     }
 
