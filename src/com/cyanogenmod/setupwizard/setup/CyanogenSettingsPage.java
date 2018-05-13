@@ -337,8 +337,6 @@ public class CyanogenSettingsPage extends SetupPage {
             mPrivacyGuardRow = mRootView.findViewById(R.id.privacy_guard);
             mPrivacyGuardRow.setOnClickListener(mPrivacyGuardClickListener);
             mPrivacyGuard = (CheckBox) mRootView.findViewById(R.id.privacy_guard_checkbox);
-            mPrivacyGuard.setChecked(CMSettings.Secure.getInt(getActivity().getContentResolver(),
-                    CMSettings.Secure.PRIVACY_GUARD_DEFAULT, 0) == 1);
         }
 
         @Override
@@ -351,17 +349,25 @@ public class CyanogenSettingsPage extends SetupPage {
             super.onResume();
             updateDisableNavkeysOption();
             updateMetricsOption();
+            updatePrivacyGuardOption();
             updateThemeOption();
         }
 
         private void updateMetricsOption() {
             final Bundle myPageBundle = mPage.getData();
-            boolean metricsChecked =
-                    !myPageBundle.containsKey(KEY_SEND_METRICS) || myPageBundle
-                            .getBoolean(KEY_SEND_METRICS);
+            boolean metricsChecked = myPageBundle.containsKey(KEY_SEND_METRICS) ?
+                    myPageBundle.getBoolean(KEY_SEND_METRICS) : false;
             mMetrics.setChecked(metricsChecked);
             myPageBundle.putBoolean(KEY_SEND_METRICS, metricsChecked);
         }
+
+        private void updatePrivacyGuardOption() {
+            final Bundle myPageBundle = mPage.getData();
+            boolean privacyGuardChecked = myPageBundle.containsKey(KEY_PRIVACY_GUARD) ?
+                    myPageBundle.getBoolean(KEY_PRIVACY_GUARD) : true;
+            mPrivacyGuard.setChecked(privacyGuardChecked);
+            myPageBundle.putBoolean(KEY_PRIVACY_GUARD, privacyGuardChecked);
+        }        
 
         private void updateThemeOption() {
             if (!mHideThemeRow) {
